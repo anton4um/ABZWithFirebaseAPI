@@ -6,8 +6,8 @@ import {Injectable} from '@angular/core';
 @Injectable()
 export class CheerfUserService{
     user: any;
-    startedEdititngUser = new BehaviorSubject<any>(null);
-    endEditingUser = new BehaviorSubject<any>(null);
+    startedEdititngUser = new BehaviorSubject<UserDataFormat>(null);
+    endEditingUser = new Subject<UserDataFormat>();
     // ngOnInit(){
     //     this.startedEdititngUser.subscribe(user => {
     //         console.log('Current USER 2: ', this.user)

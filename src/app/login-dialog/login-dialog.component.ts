@@ -65,7 +65,6 @@ export class LoginDialogOverviewDialog implements OnInit {
   authObs: Observable<AuthResponseData>;
 
   onSubmit(form: FormGroup) {
-    console.log("Auth Form: ", form.value);
     const email = form.value.email;
     const password = form.value.password;
     if (this.isInLoginMode) {

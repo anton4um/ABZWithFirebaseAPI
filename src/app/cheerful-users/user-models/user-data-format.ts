@@ -4,7 +4,7 @@ export interface UserDataFormat {
         name: string,
         email: string,
         phone: string,
-        photo: string,
+        photo?: string,
         position: string,
     
     

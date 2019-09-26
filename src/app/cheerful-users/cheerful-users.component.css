@@ -29,7 +29,8 @@ input[name="pathToFileUpload"] {
 .user-data-frame /* for limitation of user data frame */
  {
   height: 200px;
-  width: 200px;
+  width: 250px;
+  margin: 0 auto;
 }
 /* set Show More button style */
 .showmore-set-btn-style {

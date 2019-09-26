@@ -1,19 +1,16 @@
 import { CheerfUserService } from './../cheerf-user.service';
-import { CheerfulUsersComponent } from './../cheerful-users.component';
 import { UserPosition } from './../user-models/user-position.model';
 import { HttpService } from "./../../shared/http.service";
 import { Validators } from "@angular/forms";
 import { FormControl } from "@angular/forms";
 import { FormGroup } from "@angular/forms";
-import { Component, OnInit, AfterViewInit } from "@angular/core";
+import { Component, OnInit, AfterViewInit, OnDestroy } from "@angular/core";
 import {
   MatDialog,
   MatDialogRef,
-  MAT_DIALOG_DATA
 } from "@angular/material/dialog";
-import { Observable } from "rxjs";
-import {UserDataFormat} from '../user-models/user-data-format';
-import {take, exhaustMap} from 'rxjs/operators';
+import { Subscription } from "rxjs";
+import Inputmask from "inputmask";
 
 export interface DialogData {
   animal: string;
@@ -39,7 +36,7 @@ export class EditUserDialogComponent implements OnInit {
   selector: "app-edit-user-dialog-overview-dialog",
   templateUrl: "./edit-user-dialog-overview-dialog.html"
 })
-export class EditUserDialogOverviewDialog implements OnInit, AfterViewInit {
+export class EditUserDialogOverviewDialog implements OnInit, AfterViewInit, OnDestroy {
   
   isInLoginMode = true;
   userPositions: UserPosition[] = [];
@@ -47,6 +44,7 @@ export class EditUserDialogOverviewDialog implements OnInit, AfterViewInit {
   isLoading = false;
   error =  null;
   user: any;
+  startedEdititngUserSub: Subscription;
 
   constructor(
     public dialogRef: MatDialogRef<EditUserDialogOverviewDialog>,
@@ -55,6 +53,7 @@ export class EditUserDialogOverviewDialog implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit() {
+
     this.editUserForm = new FormGroup({
       name: new FormControl(null, [Validators.required]),
       email: new FormControl(null, [Validators.required, Validators.email]),
@@ -65,9 +64,8 @@ export class EditUserDialogOverviewDialog implements OnInit, AfterViewInit {
       .getUserDataFromUrl("https://abztesttask.firebaseio.com/positions.json")
       .subscribe(positions => {
         this.userPositions = positions as UserPosition[];
-        console.log('user Positions from EditDialog: ', this.userPositions);
       });
-    this.cheerfulUserService.startedEdititngUser.subscribe(
+  this.startedEdititngUserSub =  this.cheerfulUserService.startedEdititngUser.subscribe(
       user => {
         console.log("Have a CUrrent Users", user);
         this.user = user;
@@ -75,8 +73,8 @@ export class EditUserDialogOverviewDialog implements OnInit, AfterViewInit {
           name: user.name,
           email: user.email,
           phone: user.phone,
-          posiotion: null,
         });
+        this.editUserForm.get('position').setValue(user.position);
       }
     );
   }
@@ -89,17 +87,22 @@ export class EditUserDialogOverviewDialog implements OnInit, AfterViewInit {
       phone: this.editUserForm.get('phone').value,
       position: this.editUserForm.get('position').value,
     }
-    console.log('Send User: ',sendUser, 'our USER: ',this.user);
     this.cheerfulUserService.endEditingUser.next(sendUser);
     this.editUserForm.reset();
     this.dialogRef.close();
   }
 
   ngAfterViewInit(): void {
-    console.log('Current USER', this.user);
+    Inputmask({ mask: "+38(999) 999 99 99" }).mask(
+      document.getElementById("phoneUser")
+    );
   }
   dialogCencel(){
     this.editUserForm.reset();
     this.dialogRef.close();
+  }
+
+  ngOnDestroy(){
+    this.startedEdititngUserSub.unsubscribe();
   }
 }

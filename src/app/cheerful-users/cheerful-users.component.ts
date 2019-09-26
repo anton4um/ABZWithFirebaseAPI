@@ -2,7 +2,7 @@ import { CheerfUserService } from "./cheerf-user.service";
 import { UserDataFormat } from "./user-models/user-data-format";
 import { AuthService } from "./../login-dialog/auth.service";
 import { AlertDialogComponent } from "./../alert-dialog/alert-dialog.component";
-import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, OnInit, ViewChild, OnDestroy } from "@angular/core";
 import { HttpService } from "../shared/http.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { UserPosition } from "./user-models/user-position.model";
@@ -16,6 +16,7 @@ import {
 import * as firebase from "firebase/app";
 import "firebase/database";
 import { EditUserDialogComponent } from "./edit-user-dialog/edit-user-dialog.component";
+import { Subscription } from "rxjs";
 
 declare var $: any;
 @Component({
@@ -23,7 +24,7 @@ declare var $: any;
   templateUrl: "./cheerful-users.component.html",
   styleUrls: ["./cheerful-users.component.css"]
 })
-export class CheerfulUsersComponent implements OnInit, AfterViewInit {
+export class CheerfulUsersComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(AlertDialogComponent, { static: false })
   public dialog: AlertDialogComponent;
   @ViewChild(EditUserDialogComponent, { static: false })
@@ -36,7 +37,7 @@ export class CheerfulUsersComponent implements OnInit, AfterViewInit {
   prev_url: string;
   userPositions: UserPosition[] = [];
   currentUserIndex: number;
-
+  endEditUserSub: Subscription;
 
   public uploadFileEl: HTMLElement;
   public signupForm: FormGroup;
@@ -83,23 +84,25 @@ export class CheerfulUsersComponent implements OnInit, AfterViewInit {
       }
     });
 
-    this.cheerfulUserService.endEditingUser.subscribe(user => {
-      if(user){
-        console.log("End of user Editing: ", user);
+    this.endEditUserSub = this.cheerfulUserService.endEditingUser.subscribe(
+      user => {
+        // if(user){
         firebase
           .database()
           .ref("users/" + user.id)
-          .update({ 'name': user.name,
-                    'email': user.email,
-                    'phone': user.phone,
-                    'position': user.position
-                  });
-      this.users[this.currentUserIndex].name = user.name;
-      this.users[this.currentUserIndex].email = user.email;
-      this.users[this.currentUserIndex].phone = user.phone;
-      this.users[this.currentUserIndex].position = user.position;
+          .update({
+            name: user.name,
+            email: user.email,
+            phone: user.phone,
+            position: user.position
+          });
+        this.users[this.currentUserIndex].name = user.name;
+        this.users[this.currentUserIndex].email = user.email;
+        this.users[this.currentUserIndex].phone = user.phone;
+        this.users[this.currentUserIndex].position = user.position;
+        // }
       }
-    });
+    );
 
     this.signupForm = new FormGroup({
       username: new FormControl(null, Validators.required),
@@ -200,25 +203,15 @@ export class CheerfulUsersComponent implements OnInit, AfterViewInit {
   });
   onEditUser(index: number) {
     this.currentUserIndex = index;
-    this.promise
-      .then(() => {
-        this.cheerfulUserService.startedEdititngUser.next(this.users[index]);
-        console.log("NEXT Method is reached");
-      })
-      .then(() => {
-        console.log("Diealog is opened");
-        this.editUserDialog.openDialog();
-      });
+    this.cheerfulUserService.startedEdititngUser.next(this.users[index]);
+    this.editUserDialog.openDialog();
   }
 
   onSubmit() {
-    if (this.signupForm.get("phone").valid) {
-      this.phoneClearValue = this.signupForm
-        .get("phone")
-        .value.replace("(", "")
-        .replace(")", "")
-        .replace(/\s+/g, "");
-    }
     this.uploadDataToFirebase();
+  }
+
+  ngOnDestroy(){
+    this.endEditUserSub.unsubscribe();
   }
 }

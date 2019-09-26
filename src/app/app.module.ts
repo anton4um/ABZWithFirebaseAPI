@@ -16,7 +16,6 @@ import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
 import { MatIconModule } from "@angular/material/icon";
 import { ReactiveFormsModule } from "@angular/forms";
-import { PhoneValidatorDirective } from "./phone-validator/phone-validator.directive";
 import { TextMaskModule } from "angular2-text-mask";
 import { IMaskModule } from "angular-imask";
 import { FooterComponent } from "./footer/footer.component";
@@ -32,7 +31,6 @@ import {
   AlertDialogComponent,
   DialogOverviewExampleDialog
 } from "./alert-dialog/alert-dialog.component";
-import { AuthComponent } from "./auth/auth.component";
 import {
   LoginDialogComponent,
   LoginDialogOverviewDialog
@@ -52,12 +50,10 @@ import {
     AquaintedComponent,
     RequirementsComponent,
     CheerfulUsersComponent,
-    PhoneValidatorDirective,
     FooterComponent,
     AppMainNavComponent,
     AlertDialogComponent,
     DialogOverviewExampleDialog,
-    AuthComponent,
     LoginDialogComponent,
     LoginDialogOverviewDialog,
     LoadingSpinnerComponent,

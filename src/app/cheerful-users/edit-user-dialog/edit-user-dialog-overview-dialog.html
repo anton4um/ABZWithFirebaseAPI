@@ -9,14 +9,11 @@
   <form [formGroup]="editUserForm" (ngSubmit)="onSubmit()">
     <!-- <mat-label>Your email:</mat-label> -->
     <mat-form-field>
-      <input
-        matInput
-        placeholder="name"
-        formControlName="name"
-        name="name"
-      />
+      <input matInput placeholder="name" formControlName="name" name="name" />
       <mat-error
-        *ngIf="!editUserForm.get('name').valid && editUserForm.get('name').touched"
+        *ngIf="
+          !editUserForm.get('name').valid && editUserForm.get('name').touched
+        "
       >
         Enter a valid name
       </mat-error>
@@ -40,40 +37,42 @@
       </mat-error>
     </mat-form-field>
     <mat-form-field>
-        <input
-          formControlName="phone"
-          matInput
-          placeholder="phone"
-          name="phone"
-        />
-        <mat-error
-          *ngIf="
-            !editUserForm.get('phone').valid && editUserForm.get('phone').touched
-          "
+      <input
+        formControlName="phone"
+        matInput
+        placeholder="phone"
+        name="phone"
+        id="phoneUser"
+        pattern="\+38\s?[\(]{0,1}[0-9]{3}[\)]{0,1}\s?\d{3}[ ]{0,1}\d{2}[ ]{0,1}\d{2}"
+      />
+      <mat-error
+        *ngIf="
+          !editUserForm.get('phone').valid && editUserForm.get('phone').touched
+        "
+      >
+        Enter a valid phone
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="w-100" appearance="outline">
+      <mat-label>Select your position</mat-label>
+      <mat-select name="position" formControlName="position">
+        <mat-option
+          *ngFor="let position of userPositions"
+          [value]="position.name"
+          id="position.name"
         >
-          Enter a valid phone
-        </mat-error>
-      </mat-form-field>
-      <mat-form-field class="w-100" appearance="outline">
-          <mat-label>Select your position</mat-label>
-          <mat-select name="position" formControlName="position">
-            <mat-option
-              *ngFor="let position of userPositions"
-              [value]="position.name"
-              id="position.position_id"
-            >
-              {{ position.name }}
-            </mat-option>
-          </mat-select>
-          <mat-error
-            *ngIf="
-              !editUserForm.get('position').valid &&
-              editUserForm.get('position').touched
-            "
-          >
-            Please, select your position
-          </mat-error>
-      </mat-form-field>
+          {{ position.name }}
+        </mat-option>
+      </mat-select>
+      <mat-error
+        *ngIf="
+          !editUserForm.get('position').valid &&
+          editUserForm.get('position').touched
+        "
+      >
+        Please, select your position
+      </mat-error>
+    </mat-form-field>
     <div mat-dialog-actions>
       <button mat-button type="submit" [disabled]="!editUserForm.valid">
         Save
