@@ -1,0 +1,122 @@
+<app-login-dialog #loginDialog></app-login-dialog>
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport="false"
+      [ngClass]="{hidden: !(isHandset$ | async)}"
+      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+      [mode]="(isHandset$ | async) ? 'over' : 'side'"
+      [opened]="(isHandset$ | async) === false">
+    <mat-toolbar>
+      <div class="container">
+        <div class="row">
+          <div class="text-left">
+            <img src="../../img/user-superstar-2x.jpg"
+                 class="rounded-circle"
+                 style="width: 72px; height: 72px;">
+            <p class="user-name">Superstar</p>
+            <p class="text-muted small">Superstar@gmail.com</p>
+            <hr>
+          </div>
+        </div>
+      </div>
+    </mat-toolbar>
+    <mat-nav-list>
+      <a mat-list-item href="#">About Me</a>
+      <a mat-list-item href="#">Relationships</a>
+      <a mat-list-item href="#">Requirements</a>
+      <a mat-list-item href="#">Users</a>
+      <a mat-list-item href="#">Sign Up</a>
+      <a mat-list-item href="#">Sign Out</a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+<mat-toolbar color="primary">
+
+
+
+  <div class="d-flex
+              justify-content-between
+              row-hl
+              w-100"
+                >
+
+      <div class="logo-img-align item-hl ml-5">
+        <img src="../../img/logo.svg" class="logo-img">
+      </div>
+
+
+  <div *ngIf="!(isHandset$ | async)"
+       class="d-flex
+              justify-content-between
+              row-hl
+              item-hl
+              main-menu-links
+              w-auto">
+
+          <!--<div class="main-menu-links item-hl">-->
+            <ul class="nav nav-pills nav-fill item-hl">
+              <li>
+                <a href="#" class="nav-item nav-link">About Me</a>
+              </li>
+              <li>
+                <a href="#" class="nav-item nav-link">Relationships</a>
+              </li>
+              <li>
+                <a href="#" class="nav-item nav-link">Requirements</a>
+              </li>
+              <li>
+                <a href="#" class="nav-item nav-link">Users</a>
+              </li>
+              <li>
+                <a href="#" class="nav-item nav-link" (click)="loginDialog.openDialog()">Sign Up</a>
+              </li>
+              <li>
+                <a href="#" class="nav-item nav-link" (click)="logout()">Sign Out</a>
+              </li>
+            </ul>
+          <!--</div>-->
+  </div>
+
+            <div class="d-flex
+                        justify-content-around
+                        row-hl
+                        item-hl"
+                        *ngIf="!(isHandset$ | async)">
+
+              <div class="user-data item-hl">
+                  <p>
+                    <b>Superstar</b><br>
+                    <a class="text-muted small">Superstar@gmail.com</a>
+                  </p>
+              </div>
+
+                <div class="user-img-align item-hl ml-4">
+                  <img src="../../img/user-superstar-2x.jpg"
+                       class="rounded-circle"
+                       style="width: 50px; height: 50px;">
+                </div>
+                <div class="sign-out-img-align item-hl ml-4 mr-5">
+                  <img src="../../img/icons/sign-out.svg"
+                       style="width: 35px; height: 35px;">
+                </div>
+
+            </div>
+
+  </div><!--d-flex block end-->
+
+      <span class="spacer" *ngIf="isHandset$ | async"></span>
+      <button
+        class="mr-5"
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()"
+        *ngIf="isHandset$ | async">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+
+
+</mat-toolbar>
+    <!-- Add Content Here -->
+    <ng-content></ng-content>
+  </mat-sidenav-content>
+</mat-sidenav-container>

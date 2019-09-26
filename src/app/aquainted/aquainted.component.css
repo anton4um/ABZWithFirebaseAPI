@@ -1,0 +1,73 @@
+
+
+
+#man-mobile-img{
+  /*background-image: url("../../img/man-mobile.svg");*/
+  height: 284px;
+  width: 289px;
+  margin: auto;
+  display: block;
+}
+#html-img{
+  /*background-image: url("../../img/html.svg");*/
+  height: 114px;
+  width: 100px;
+  margin: auto;
+  display: block;
+}
+#css-img{
+  /*background-image: url("../../img/css.svg");*/
+  height: 114px;
+  width: 100px;
+  margin: auto;
+  display: block;
+}
+#js-img{
+  /*background-image: url("../../img/javascript.svg");*/
+  height: 114px;
+  width: 100px;
+  margin: auto;
+  display: block;
+}
+
+@media(max-width: 767px){
+  .text-tech-align{
+    text-align: center;
+    margin: 0 auto;
+  }
+  .main-text-align{
+    text-align: center;
+  }
+  .text-about-tech-width{
+    width: 250px;
+  }
+}
+
+@media(min-width: 768px){
+  /*#man-mobile-img{*/
+    /*margin-top: 55px;*/
+  /*}*/
+  .main-text-align{
+    text-align: left;
+  }
+  .text-about-tech-width{/*ширина блока для текста про технологии*/
+    width: 400px;
+  }
+  .text-tech-align-together{/* выравнивание текста заголовка и текста про технологии */
+    text-align: left;
+  }
+}
+@media(min-width: 992px){
+  .text-about-tech-width{
+    width: 250px;
+  }
+  .text-tech-align{
+    text-align: center;
+    margin: 0 auto;
+  }
+  .text-tech-align-together{
+    text-align: center;
+  }
+
+}
+

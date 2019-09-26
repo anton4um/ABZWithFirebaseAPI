@@ -1,0 +1,52 @@
+<h1 mat-dialog-title class="text-center">
+  Please SignUp or Login
+</h1>
+<div class="text-center" *ngIf="isLoading">
+  <app-loading-spinner></app-loading-spinner>
+</div>
+<div mat-dialog-content class="text-center" *ngIf="!isLoading">
+  <div class="alert alert-danger" *ngIf="error">{{ error }}</div>
+  <form [formGroup]="authForm" (ngSubmit)="onSubmit(authForm)">
+    <!-- <mat-label>Your email:</mat-label> -->
+    <mat-form-field>
+      <input
+        matInput
+        placeholder="email"
+        formControlName="email"
+        name="email"
+      />
+      <mat-error
+        *ngIf="!authForm.get('email').valid && authForm.get('email').touched"
+      >
+        Enter a valid email
+      </mat-error>
+    </mat-form-field>
+    <!-- <mat-label>Your password:</mat-label> -->
+    <mat-form-field>
+      <input
+        formControlName="password"
+        matInput
+        type="password"
+        placeholder="Password"
+        minlength="6"
+        name="password"
+      />
+      <mat-error
+        *ngIf="
+          !authForm.get('password').valid && authForm.get('password').touched
+        "
+      >
+        Enter a valid password
+      </mat-error>
+    </mat-form-field>
+
+    <div mat-dialog-actions class="ml-5">
+      <button mat-button type="submit" [disabled]="!authForm.valid">
+        {{ isInLoginMode ? "Login" : "Sign Up" }}
+      </button>
+      <button mat-button type="button" (click)="switchLoginMode()">
+        Switch to {{ isInLoginMode ? "Sign Up" : "Login" }}
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,92 @@
+input[name="pathToFileUpload"] {
+  border-radius: 0 5px 5px 0;
+}
+.input-group-append {
+  /* welding input and upload button */
+  height: 65px;
+}
+.signup-set-btn-style {
+  color: dimgray;
+  border-color: darkgrey;
+  background-color: darkgray;
+  width: 290px;
+  font-size: 18px;
+}
+.signup-set-btn-style:hover {
+  background-color: slategray;
+}
+.signup-set-btn-style:active {
+  background-color: gray;
+  color: dimgray;
+}
+.user-data-text {
+  /* text align of user data */
+  text-align: center;
+  overflow-wrap: normal;
+  text-overflow: ellipsis;
+  overflow: scroll;
+}
+.user-data-frame /* for limitation of user data frame */
+ {
+  height: 200px;
+  width: 200px;
+}
+/* set Show More button style */
+.showmore-set-btn-style {
+  color: coral;
+  border-color: coral;
+  background-color: transparent;
+  width: 290px;
+  font-size: 18px;
+}
+/*ShowMore*/
+.showmore-set-btn-style:hover {
+  background-color: bisque;
+}
+
+/* upload photo button style */
+.upload-btn {
+  color: coral;
+  border-color: coral;
+  background-color: transparent;
+  height: 60px;
+  width: 250px;
+  margin-top: 4px;
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+}
+.upload-btn:hover {
+  background-color: bisque;
+}
+.upload-btn:active {
+  background-color: bisque;
+  color: coral;
+}
+.upload-icon-box,
+.upload-icon {
+  display: none;
+}
+@media (max-width: 768px) {
+  .upload-field-padding {
+    padding-left: 0px;
+  }
+}
+@media (max-width: 567px) {
+  .upload-btn {
+    display: none;
+  }
+  .upload-icon-box {
+    width: 80px;
+    height: 60px;
+    margin-top: 4px;
+    border: 2px solid coral;
+    box-sizing: border-box;
+    display: block;
+    text-align: center;
+    border-radius: 0 5px 5px 0;
+  }
+  .upload-icon {
+    display: inline;
+    padding-top: 25%;
+  }
+}

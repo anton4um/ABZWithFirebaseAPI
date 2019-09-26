@@ -1,0 +1,86 @@
+<h1 mat-dialog-title class="text-center">
+  Please SignUp or Login
+</h1>
+<div class="text-center" *ngIf="isLoading">
+  <app-loading-spinner></app-loading-spinner>
+</div>
+<div mat-dialog-content class="text-center" *ngIf="!isLoading">
+  <div class="alert alert-danger" *ngIf="error">{{ error }}</div>
+  <form [formGroup]="editUserForm" (ngSubmit)="onSubmit()">
+    <!-- <mat-label>Your email:</mat-label> -->
+    <mat-form-field>
+      <input
+        matInput
+        placeholder="name"
+        formControlName="name"
+        name="name"
+      />
+      <mat-error
+        *ngIf="!editUserForm.get('name').valid && editUserForm.get('name').touched"
+      >
+        Enter a valid name
+      </mat-error>
+    </mat-form-field>
+    <!-- <mat-label>Your password:</mat-label> -->
+    <mat-form-field>
+      <input
+        formControlName="email"
+        matInput
+        type="email"
+        placeholder="email"
+        minlength="6"
+        name="email"
+      />
+      <mat-error
+        *ngIf="
+          !editUserForm.get('email').valid && editUserForm.get('email').touched
+        "
+      >
+        Enter a valid email
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+        <input
+          formControlName="phone"
+          matInput
+          placeholder="phone"
+          name="phone"
+        />
+        <mat-error
+          *ngIf="
+            !editUserForm.get('phone').valid && editUserForm.get('phone').touched
+          "
+        >
+          Enter a valid phone
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="w-100" appearance="outline">
+          <mat-label>Select your position</mat-label>
+          <mat-select name="position" formControlName="position">
+            <mat-option
+              *ngFor="let position of userPositions"
+              [value]="position.name"
+              id="position.position_id"
+            >
+              {{ position.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error
+            *ngIf="
+              !editUserForm.get('position').valid &&
+              editUserForm.get('position').touched
+            "
+          >
+            Please, select your position
+          </mat-error>
+      </mat-form-field>
+    <div mat-dialog-actions>
+      <button mat-button type="submit" [disabled]="!editUserForm.valid">
+        Save
+      </button>
+      <button mat-button type="button" (click)="dialogCencel()">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>

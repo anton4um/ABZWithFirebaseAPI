@@ -1,0 +1,235 @@
+<div class="container">
+  <!--<div class="row">-->
+  <h2 class="text-center mt-5 mb-5">Our Cheerful Users</h2>
+  <!--</div>-->
+
+  <div class="row">
+    <!--start row-->
+
+    <div class="container">
+      <div class="row">
+        <div
+          *ngFor="let user of users; let i = index"
+          class="col-sm-12 col-md-4 col-lg-4 col-xl-4"
+        >
+          <div class="text-center">
+            <img
+              src="{{ user.photo }}"
+              class="rounded-circle"
+              style="height: 72px; width: 72px"
+            />
+          </div>
+          <div style="height: 150px; width: 250px; margin: 0 auto;">
+            <h4 class="user-data-text">{{ user.name }}</h4>
+            <p class="user-data-text">
+              {{ user.email }}
+              {{ user.phone }}
+              {{ user.position }}
+            </p>
+            <div class="text-center">
+              <button
+                type="button"
+                class="btn btn-danger"
+                (click)="onEditUser(i)"
+              >
+                Edit
+              </button>
+            </div>
+          </div>
+        </div>
+        <!--end of row-->
+      </div>
+    </div>
+
+    <!--end of row-->
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div style="margin: 0 auto;">
+        <button class="showmore-set-btn-style btn btn-default">
+          <b>Show more</b>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row text-center">
+    <h2 class="mt-5 col-12">Register to get a work</h2>
+    <p class="mt-2 col-12">
+      Attention! After successful registration and alert, update the list of
+      users in the block from the top
+    </p>
+  </div>
+</div>
+<!--first container end-->
+
+<div class="container">
+  <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+    <div class="row ">
+      <div class="form-group col-sm-12 col-md-4 col-lg-4 col-xl-4">
+        <mat-form-field class="w-100" appearance="outline">
+          <mat-label>Your name</mat-label>
+          <input
+            matInput
+            class="text-muted"
+            id="username"
+            minlength="3"
+            name="username"
+            formControlName="username"
+          />
+          <mat-error
+            *ngIf="
+              !signupForm.get('username').valid &&
+              signupForm.get('username').touched
+            "
+          >
+            Please, enter a valid name
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="form-group col-sm-12 col-md-4 col-lg-4 col-xl-4">
+        <mat-form-field class="w-100" appearance="outline">
+          <mat-label>Your email</mat-label>
+          <input
+            matInput
+            class="text-muted"
+            id="email"
+            type="email"
+            name="email"
+            formControlName="email"
+          />
+          <mat-error
+            *ngIf="
+              !signupForm.get('email').valid && signupForm.get('email').touched
+            "
+          >
+            Please, enter a valid email
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="form-group col-sm-12 col-md-4 col-lg-4 col-xl-4">
+        <mat-form-field class="w-100" appearance="outline">
+          <mat-label>Your phone</mat-label>
+          <!--phoneValid-->
+          <input
+            matInput
+            class="text-muted"
+            id="phone"
+            name="phone"
+            type="tel"
+            minlength="15"
+            maxlength="18"
+            size="18"
+            pattern="\+38\s?[\(]{0,1}[0-9]{3}[\)]{0,1}\s?\d{3}[ ]{0,1}\d{2}[ ]{0,1}\d{2}"
+            formControlName="phone"
+          />
+          <mat-error
+            *ngIf="
+              !signupForm.get('phone').valid && signupForm.get('phone').touched
+            "
+          >
+            Please, enter a valid phone
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="row mx-0">
+      <div class="form-group  col-sm-12 col-md-6 col-lg-6 col-xl-6 mx-0 px-0">
+        <mat-form-field class="w-100" appearance="outline">
+          <mat-label>Select your position</mat-label>
+          <mat-select name="position" formControlName="position">
+            <mat-option
+              *ngFor="let position of userPositions"
+              [value]="position.name"
+              id="position.position_id"
+            >
+              {{ position.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error
+            *ngIf="
+              !signupForm.get('position').valid &&
+              signupForm.get('position').touched
+            "
+          >
+            Please, select your position
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div
+        class="form-group col-sm-12 col-md-6 col-lg-6 col-xl-6 pr-0 upload-field-padding"
+      >
+        <div class="input-group-append">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Upload your photo</mat-label>
+            <input
+              name="pathToFileUpload"
+              matInput
+              formControlName="pathToFileUpload"
+              class="text-muted"
+            />
+            <mat-error *ngIf="!signupForm.get('upload').valid">
+              Please, upload valid photo
+            </mat-error>
+          </mat-form-field>
+          <input
+            id="upload"
+            name="upload"
+            #file
+            type="file"
+            [hidden]="true"
+            accept="image/*"
+            formControlName="upload"
+          />
+
+          <button
+            class="btn btn-default upload-btn"
+            (click)="file.click()"
+            type="button"
+          >
+            Upload
+          </button>
+          <div class="upload-icon-box">
+            <img
+              class="upload-icon"
+              (click)="file.click()"
+              src="../../img/icons/upload.svg"
+            />
+          </div>
+        </div>
+        <div class="text-left">
+          <small
+            *ngIf="
+              signupForm.get('pathToFileUpload').untouched ||
+              (signupForm.get('pathToFileUpload').valid &&
+                signupForm.get('upload').value === null)
+            "
+            class="col form-text text-muted"
+          >
+            File format jpg up to 5 MB, the minimum size 70x70px
+          </small>
+          <div class="progress">
+            <div
+              class="progress-bar bg-danger progress-bar-striped progress-bar-animated"
+              [style.width]="uploadProgress + '%'"
+            >
+              {{ uploadProgress }}%
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div style="margin: 0 auto;">
+        <button class="signup-set-btn-style btn btn-default" type="submit">
+          <b> Sign Up</b>
+        </button>
+        <app-alert-dialog-component></app-alert-dialog-component>
+        <app-edit-user-dialog></app-edit-user-dialog>
+      </div>
+    </div>
+  </form>
+</div>

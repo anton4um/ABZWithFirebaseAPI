@@ -1,0 +1,82 @@
+hr{
+  margin-top: 1.5rem;
+  margin-bottom: 0;
+}
+a.nav-item.nav-link{
+  /*text-transform: none;*/
+  padding-right: 0;
+  color: black;
+}
+.user-data > p{
+  line-height: 18px;
+  margin-top: 15px;
+  font-size: 15px;
+}
+.user-data{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: right;
+}
+.sidenav-container {
+  height: 100%;
+}
+
+.sidenav {
+  width: 200px;
+}
+
+.sidenav .mat-toolbar {
+  background: inherit;
+}
+
+.mat-toolbar.mat-primary {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: white;
+  color: black;
+}
+.hidden{
+  display: none;
+}
+.sign-out-img-align{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.logo-img-align{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.user-img-align{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.text-left{
+  margin-top: 160px;
+}
+.user-name{
+  margin-bottom: 0px;
+}
+mat-nav-list{
+  margin-top: 140px;
+}
+/*.spacer{*/
+  /*flex: 1 1 auto;*/
+/*}*/
+.logo-img{
+  height: 25px;
+}
+.main-menu-links{
+  margin-top: 7px;
+  text-transform: none;
+}
+.user-data{
+  line-height: 5px;
+  font-size: 10px;
+}

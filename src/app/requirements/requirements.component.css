@@ -1,0 +1,22 @@
+.man-laptop-img{
+  /*background-image: url("../../img/man-laptop-v2.svg");*/
+  height: 407px;
+  width: 343px;
+  margin: auto;
+  display: block;
+  /*background-size: cover;*/
+
+}
+.container{
+  background-image: url("../../img/bg-2.jpg");
+  background-size: cover;
+}
+h2, p{
+  color: white;
+  margin: auto;
+}
+@media(max-width: 567px){
+  .man-laptop-img{
+    text-align: center;
+  }
+}
