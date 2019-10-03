@@ -101,7 +101,9 @@ export class EditUserDialogOverviewDialog implements OnInit, AfterViewInit, OnDe
     this.editUserForm.reset();
     this.dialogRef.close();
   }
-
+  onRemovePhoto(){
+    
+  }
   ngOnDestroy(){
     this.startedEdititngUserSub.unsubscribe();
   }

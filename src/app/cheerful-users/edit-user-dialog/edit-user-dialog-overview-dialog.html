@@ -1,11 +1,23 @@
-<h1 mat-dialog-title class="text-center">
+<h4 mat-dialog-title class="text-center">
   Please SignUp or Login
-</h1>
+</h4>
 <div class="text-center" *ngIf="isLoading">
   <app-loading-spinner></app-loading-spinner>
 </div>
 <div mat-dialog-content class="text-center" *ngIf="!isLoading">
   <div class="alert alert-danger" *ngIf="error">{{ error }}</div>
+  <div class="mb-3" *ngIf="user">
+    <img [src]="user.photo" class="mb-3" style="height: 100px; width: 100px;" />
+    <button
+      class="btn btn-danger"
+      style="width: 100px;     height: 25px;
+      font-size: 10px; margin: 0 auto;"
+      type="button"
+      (click)="onRemovePhoto(user.photo_path)"
+    >
+      Remove Photo
+    </button>
+  </div>
   <form [formGroup]="editUserForm" (ngSubmit)="onSubmit()">
     <!-- <mat-label>Your email:</mat-label> -->
     <mat-form-field>
