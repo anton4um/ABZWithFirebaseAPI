@@ -60,7 +60,10 @@ export class FirebaseService implements OnInit {
           this.photoData.photo_path
         );
       });
-  return await this.photoData
+  return this.photoData
   }
-  
+  onDeleteFile(fileName: string){
+      let ref = this.afStorage.ref(fileName);
+      ref.delete();
+  }
 }

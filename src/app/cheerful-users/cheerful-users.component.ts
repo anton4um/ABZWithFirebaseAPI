@@ -48,8 +48,8 @@ export class CheerfulUsersComponent
   currentUserIndex: number;
   endEditUserSub: Subscription;
 
-  public uploadFileEl: HTMLElement;
-  public signupForm: FormGroup;
+  uploadFileEl: HTMLElement;
+  signupForm: FormGroup;
 
   constructor(
     private httpService: HttpService,

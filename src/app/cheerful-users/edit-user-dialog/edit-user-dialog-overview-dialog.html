@@ -7,16 +7,37 @@
 <div mat-dialog-content class="text-center" *ngIf="!isLoading">
   <div class="alert alert-danger" *ngIf="error">{{ error }}</div>
   <div class="mb-3" *ngIf="user">
-    <img [src]="user.photo" class="mb-3" style="height: 100px; width: 100px;" />
     <button
-      class="btn btn-danger"
+      (click)="uploadUserPhotoEl.click()"
+      class="btn btn-danger d-block m-auto"
       style="width: 100px;     height: 25px;
       font-size: 10px; margin: 0 auto;"
-      type="button"
-      (click)="onRemovePhoto(user.photo_path)"
+      *ngIf="!userPhotoViewer"
     >
-      Remove Photo
+      Add Photo
     </button>
+    <input
+      type="file"
+      id="uploadPhotoEditUser"
+      [hidden]="true"
+      #uploadUserPhotoEl
+    />
+    <div *ngIf="userPhotoViewer">
+      <img
+        [src]="userPhotoViewer"
+        class="mb-3"
+        style="height: 100px; width: 100px;"
+      />
+      <button
+        class="btn btn-danger d-block"
+        style="width: 100px;     height: 25px;
+          font-size: 10px; margin: 0 auto;"
+        type="button"
+        (click)="onRemovePhoto(user.photo_path)"
+      >
+        Remove Photo
+      </button>
+    </div>
   </div>
   <form [formGroup]="editUserForm" (ngSubmit)="onSubmit()">
     <!-- <mat-label>Your email:</mat-label> -->
