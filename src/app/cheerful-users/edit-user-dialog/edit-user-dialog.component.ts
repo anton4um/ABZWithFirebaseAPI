@@ -66,7 +66,6 @@ export class EditUserDialogOverviewDialog
       });
     this.startedEdititngUserSub = this.cheerfulUserService.startedEdititngUser.subscribe(
       user => {
-        console.log("Have a CUrrent Users", user);
         this.userPhotoViewer = user.photo;
         this.user = user;
         this.editUserForm.patchValue({
@@ -81,6 +80,10 @@ export class EditUserDialogOverviewDialog
 
   async onSubmit() {
     this.isLoading = true;
+    // let userData: { photo_path: string; photo_url: string } = {
+    //   photo_path: "path",
+    //   photo_url: "url"
+    // };
     let userData = await this.firebaseService.uploadUserFileToFirebase(
       this.uploadFileEL["files"][0]
     );
@@ -89,10 +92,11 @@ export class EditUserDialogOverviewDialog
       name: this.editUserForm.get("name").value,
       email: this.editUserForm.get("email").value,
       phone: this.editUserForm.get("phone").value,
-      photo: (await userData).photo_url,
-      photo_path: (await userData).photo_path,
+      photo: userData.photo_url,
+      photo_path: userData.photo_path,
       position: this.editUserForm.get("position").value
     };
+    console.log("Before send SEND USER: ", sendUser);
     this.cheerfulUserService.endEditingUser.next(sendUser);
     this.editUserForm.reset();
     this.dialogRef.close();
@@ -103,7 +107,7 @@ export class EditUserDialogOverviewDialog
       document.getElementById("phoneUser")
     );
     const self = this;
-   this.uploadFileEL = document.getElementById("uploadPhotoEditUser");
+    this.uploadFileEL = document.getElementById("uploadPhotoEditUser");
 
     this.uploadFileEL.addEventListener("change", function(event) {
       let reader = new FileReader();

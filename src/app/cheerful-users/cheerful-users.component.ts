@@ -92,6 +92,7 @@ export class CheerfulUsersComponent
 
     this.endEditUserSub = this.cheerfulUserService.endEditingUser.subscribe(
       user => {
+        console.log("Our user before UPDATE in Form: ", user);
         // if(user){
         firebase
           .database()

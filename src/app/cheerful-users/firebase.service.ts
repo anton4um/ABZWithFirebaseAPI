@@ -15,55 +15,50 @@ export class FirebaseService implements OnInit {
   storageRef: AngularFireStorageReference;
 
   ngOnInit() {}
-   photoData: {photo_path: string, photo_url: string} = {'photo_path': 'path', 'photo_url': 'url'};
-//   formPhotoData = new FormData();
+  photoData: { photo_path: string; photo_url: string } = {
+    photo_path: "path",
+    photo_url: "url"
+  };
+  //   formPhotoData = new FormData();
   async uploadUserFileToFirebase(file: File) {
-    //:{photo_path: string, photo_url: string}{
-    this.storageRef = this.afStorage.ref(file.name);
-    await this.storageRef.put(file).then(snapshot => {
-      console.log(
-        "get Snapshot from Firebase while putting the file: ",
-        snapshot
-      );
-
-    //   let photoData: { photo_path: string; photo_url: string } = {
-    //     photo_path: "path",
-    //     photo_url: "url"
-    //   };
-
-    //   console.log(
-    //     "BEFORE RETURN Form data from Promise Url: ",
-    //     this.photoData.photo_url,
-    //     this.photoData.photo_path
-    //   );
-    });
-
-   await this.storageRef
-      .getMetadata()
-      .toPromise()
-      .then(meta => {
-        this.photoData.photo_path = meta.fullPath;
-        // photoData.photo_path = meta.fullPath;
-        // console.log('get Photo_Path from MetaData: ', photoData.photo_path);
-      });
-   await this.storageRef
-      .getDownloadURL()
-      .toPromise()
-      .then(url => {
-        this.photoData.photo_url = url;
-        // photoData.photo_url = url;
-        // console.log('get Photo_Url from getDownloadUrl: ', photoData.photo_url);
+    if (file) {
+      //:{photo_path: string, photo_url: string}{
+      this.storageRef = this.afStorage.ref(file.name);
+      await this.storageRef.put(file).then(snapshot => {
         console.log(
-          "Form data from Promise Url: ",
-          this.photoData.photo_url,
-          " full Path: ",
-          this.photoData.photo_path
+          "get Snapshot from Firebase while putting the file: ",
+          snapshot
         );
       });
-  return this.photoData
+
+      await this.storageRef
+        .getMetadata()
+        .toPromise()
+        .then(meta => {
+          this.photoData.photo_path = meta.fullPath;
+        });
+      await this.storageRef
+        .getDownloadURL()
+        .toPromise()
+        .then(url => {
+          this.photoData.photo_url = url;
+          console.log(
+            "Form data from Promise Url: ",
+            this.photoData.photo_url,
+            " full Path: ",
+            this.photoData.photo_path
+          );
+        });
+    }
+        if(this.photoData.photo_url){
+          return this.photoData;
+        }else{
+          return {photo_url: 'url', photo_path: "path"}
+        }
+    
   }
-  onDeleteFile(fileName: string){
-      let ref = this.afStorage.ref(fileName);
-      ref.delete();
+  onDeleteFile(fileName: string) {
+    let ref = this.afStorage.ref(fileName);
+    ref.delete();
   }
 }
