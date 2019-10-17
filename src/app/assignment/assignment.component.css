@@ -1,4 +1,4 @@
-#bgimg{
+.container-wrap{
   background-image: url('../../img/bg-1.jpg');
   background-size: cover;
 }
@@ -56,4 +56,24 @@ h1{
     margin: auto 0px;
   }
 
+}
+@media(min-width: 320px){
+  .container-wrap{
+    background-image: url('../../img/banner-bg-320.jpg');
+  }
+}
+@media(min-width: 768px){
+  .container-wrap{
+    background-image: url('../../img/banner-bg-768.jpg');
+  }
+}
+@media(min-width: 1205px){
+  .container-wrap{
+    background-image: url('../../img/banner-bg-1204.jpg');
+  }
+}
+@media(min-width: 2560px){
+  .container-wrap{
+    background-image: url('../../img/banner-bg-2560.jpg');
+  }
 }
