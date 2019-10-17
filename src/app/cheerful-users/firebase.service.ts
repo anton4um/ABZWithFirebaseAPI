@@ -51,8 +51,10 @@ export class FirebaseService implements OnInit {
         });
     }
         if(this.photoData.photo_url){
+          console.log("returned photoData url: ", this.photoData.photo_url);
           return this.photoData;
         }else{
+          console.log("returned blank object: ");
           return {photo_url: 'url', photo_path: "path"}
         }
     

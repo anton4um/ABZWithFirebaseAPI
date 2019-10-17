@@ -80,25 +80,31 @@ export class EditUserDialogOverviewDialog
 
   async onSubmit() {
     this.isLoading = true;
-    // let userData: { photo_path: string; photo_url: string } = {
-    //   photo_path: "path",
-    //   photo_url: "url"
-    // };
-    let userData = await this.firebaseService.uploadUserFileToFirebase(
-      this.uploadFileEL["files"][0]
-    );
+    let userData: { photo_path: string; photo_url: string } = {
+      photo_path: null,
+      photo_url: null
+    };
+
+    if (this.uploadFileEL["files"][0]) {
+      userData = await this.firebaseService.uploadUserFileToFirebase(
+        this.uploadFileEL["files"][0]
+      );
+    }
+
     let sendUser = {
       id: this.user.id,
       name: this.editUserForm.get("name").value,
       email: this.editUserForm.get("email").value,
       phone: this.editUserForm.get("phone").value,
-      photo: userData.photo_url,
-      photo_path: userData.photo_path,
+      photo: (await userData).photo_url,
+      photo_path: (await userData).photo_path,
       position: this.editUserForm.get("position").value
     };
     console.log("Before send SEND USER: ", sendUser);
     this.cheerfulUserService.endEditingUser.next(sendUser);
     this.editUserForm.reset();
+    // sendUser.photo_path = " ";
+    // sendUser.photo = " ";
     this.dialogRef.close();
   }
 
@@ -122,7 +128,9 @@ export class EditUserDialogOverviewDialog
     this.dialogRef.close();
   }
   onRemovePhoto() {
-    this.firebaseService.onDeleteFile(this.user.photo_path);
+    if (this.user.photo_path) {
+      this.firebaseService.onDeleteFile(this.user.photo_path);
+    }
     this.userPhotoViewer = "";
   }
 

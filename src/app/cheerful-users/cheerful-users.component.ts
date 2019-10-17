@@ -93,7 +93,7 @@ export class CheerfulUsersComponent
     this.endEditUserSub = this.cheerfulUserService.endEditingUser.subscribe(
       user => {
         console.log("Our user before UPDATE in Form: ", user);
-        // if(user){
+       if(user){
         firebase
           .database()
           .ref("users/" + user.id)
@@ -111,7 +111,7 @@ export class CheerfulUsersComponent
         this.users[this.currentUserIndex].photo = user.photo;
         this.users[this.currentUserIndex].photo_path = user.photo_path;
         this.users[this.currentUserIndex].position = user.position;
-        // }
+       }
       }
     );
 
