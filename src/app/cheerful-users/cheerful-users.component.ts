@@ -92,8 +92,6 @@ export class CheerfulUsersComponent
 
     this.endEditUserSub = this.cheerfulUserService.endEditingUser.subscribe(
       user => {
-        console.log("Our user before UPDATE in Form: ", user);
-       if(user){
         firebase
           .database()
           .ref("users/" + user.id)
@@ -112,7 +110,6 @@ export class CheerfulUsersComponent
         this.users[this.currentUserIndex].photo_path = user.photo_path;
         this.users[this.currentUserIndex].position = user.position;
        }
-      }
     );
 
     this.signupForm = new FormGroup({
@@ -122,7 +119,6 @@ export class CheerfulUsersComponent
       position: new FormControl(null, Validators.required),
       upload: new FormControl(null, [
         Validators.required
-        //this.uploadFileValidator.bind(this)
       ]),
       pathToFileUpload: new FormControl(null, Validators.required)
     });
@@ -135,7 +131,7 @@ export class CheerfulUsersComponent
     );
     this.uploadFileEl = document.getElementById("upload");
     this.uploadFileEl.addEventListener("change", function(event: Event) {
-      console.log("Event elemnt target: ", event);
+      // console.log("Event elemnt target: ", event);
       if (self.signupForm.get("upload").valid) {
         self.signupForm
           .get("pathToFileUpload")
@@ -165,24 +161,12 @@ export class CheerfulUsersComponent
   imageUploadURL: string;
 
   async uploadDataToFirebase() {
-    // const id = Math.random()
-    //   .toString(36)
-    //   .substring(2);
-    // let photoData: { photo_path: string; photo_url: string };
-    //  let dataChaine = new Promise<any>((resolve) => {
-    //     let photoData: { photo_path: string; photo_url: string };
-    //     photoData = this.firebaseService.uploadUserFileToFirebase(this.uploadFileEl["files"][0]);
-    //     console.log('beforre next chaine in Promise photoData: ', photoData);
-    //     return photoData;
-    //   })
     let file = this.uploadFileEl["files"][0];
     let photoData: any;
    photoData = await this.firebaseService
       .uploadUserFileToFirebase(file)
-  await  console.log('photoData outer: ', photoData.photo_url); 
 
     if (photoData.photo_path) {
-      console.log("phtotData after upload File: ", photoData.photo_url);
       this.httpService
         .postUserDataToUrl(this.url_users, {
           name: this.signupForm.get("username").value,
@@ -204,6 +188,7 @@ export class CheerfulUsersComponent
                   this.users.push(snap.val());
                 });
               this.dialog.openDialog();
+              this.signupForm.reset();
             }
           },
           error => {
@@ -214,21 +199,6 @@ export class CheerfulUsersComponent
           }
         );
     }
-    // this.ref = this.afStorage.ref(this.uploadFileEl["files"][0].name);
-    // console.log('reference to Storage: ', this.ref);
-    // this.ref
-    //   .put(file)
-    //   .then(snapshot => {
-    //     this.uploadProgress =
-    //       (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-    //   })
-    //   .then(() => {
-    //     let photoFilePath: string;
-    //     this.ref.getMetadata().subscribe((meta) => {
-    //       photoFilePath = meta.fullPath;
-    //       console.log('requested Full Path from Storage', photoFilePath);
-    //     });
-    //     this.ref.getDownloadURL().subscribe(url => {
   }
   onEditUser(index: number) {
     this.currentUserIndex = index;

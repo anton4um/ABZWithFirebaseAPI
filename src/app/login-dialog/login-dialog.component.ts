@@ -76,7 +76,7 @@ export class LoginDialogOverviewDialog implements OnInit {
 
     this.authObs.subscribe(
       responseData => {
-        console.log(responseData);
+        // console.log(responseData);
         this.isLoading = false;
         this.dialogRef.close();
         form.reset();

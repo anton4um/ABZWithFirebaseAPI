@@ -6,18 +6,25 @@ input[name="pathToFileUpload"] {
   height: 65px;
 }
 .signup-set-btn-style {
-  color: dimgray;
+  color: white;
   border-color: darkgrey;
-  background-color: darkgray;
+  background-color: coral;
   width: 290px;
   font-size: 18px;
 }
+
 .signup-set-btn-style:hover {
-  background-color: slategray;
+  background-color: lightcoral;
 }
+
 .signup-set-btn-style:active {
-  background-color: gray;
-  color: dimgray;
+  color: white;
+  background-color: red;
+}
+
+.signup-set-btn-style:disabled {
+  color: black;
+  background-color: grey;
 }
 .user-data-text {
   /* text align of user data */

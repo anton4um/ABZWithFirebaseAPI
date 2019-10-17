@@ -211,20 +211,12 @@
           >
             File format jpg up to 5 MB, the minimum size 70x70px
           </small>
-          <div class="progress">
-            <div
-              class="progress-bar bg-danger progress-bar-striped progress-bar-animated"
-              [style.width]="uploadProgress + '%'"
-            >
-              {{ uploadProgress }}%
-            </div>
-          </div>
         </div>
       </div>
     </div>
     <div class="row">
       <div style="margin: 0 auto;">
-        <button class="signup-set-btn-style btn btn-default" type="submit">
+        <button class="signup-set-btn-style btn btn-default" type="submit" [disabled]="!signupForm.valid">
           <b> Sign Up</b>
         </button>
         <app-alert-dialog-component></app-alert-dialog-component>

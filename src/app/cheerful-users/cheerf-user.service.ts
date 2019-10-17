@@ -7,5 +7,5 @@ import {Injectable} from '@angular/core';
 export class CheerfUserService{
     user: any;
     startedEdititngUser = new BehaviorSubject<UserDataFormat>(null);
-    endEditingUser = new BehaviorSubject<UserDataFormat>(null);
+    endEditingUser = new Subject<UserDataFormat>();
 }

@@ -100,11 +100,8 @@ export class EditUserDialogOverviewDialog
       photo_path: (await userData).photo_path,
       position: this.editUserForm.get("position").value
     };
-    console.log("Before send SEND USER: ", sendUser);
     this.cheerfulUserService.endEditingUser.next(sendUser);
     this.editUserForm.reset();
-    // sendUser.photo_path = " ";
-    // sendUser.photo = " ";
     this.dialogRef.close();
   }
 
@@ -128,9 +125,7 @@ export class EditUserDialogOverviewDialog
     this.dialogRef.close();
   }
   onRemovePhoto() {
-    if (this.user.photo_path) {
-      this.firebaseService.onDeleteFile(this.user.photo_path);
-    }
+    this.firebaseService.onDeleteFile(this.user.photo_path);
     this.userPhotoViewer = "";
   }
 
