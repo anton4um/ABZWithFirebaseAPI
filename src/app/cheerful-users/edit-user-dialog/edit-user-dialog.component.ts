@@ -66,6 +66,7 @@ export class EditUserDialogOverviewDialog
       });
     this.startedEdititngUserSub = this.cheerfulUserService.startedEdititngUser.subscribe(
       user => {
+        // console.log("our user from page: ", user);
         this.userPhotoViewer = user.photo;
         this.user = user;
         this.editUserForm.patchValue({
@@ -77,16 +78,18 @@ export class EditUserDialogOverviewDialog
       }
     );
   }
-
+  photoData: { photo_path: string; photo_url: string } = {
+    photo_path: null,
+    photo_url: null
+  };
   async onSubmit() {
     this.isLoading = true;
-    let userData: { photo_path: string; photo_url: string } = {
-      photo_path: null,
-      photo_url: null
-    };
 
+    this.photoData.photo_path = this.user.photo_path;
+    this.photoData.photo_url = this.user.photo;
+    // console.log("first photoData: ", this.photoData);
     if (this.uploadFileEL["files"][0]) {
-      userData = await this.firebaseService.uploadUserFileToFirebase(
+      this.photoData = await this.firebaseService.uploadUserFileToFirebase(
         this.uploadFileEL["files"][0]
       );
     }
@@ -96,8 +99,8 @@ export class EditUserDialogOverviewDialog
       name: this.editUserForm.get("name").value,
       email: this.editUserForm.get("email").value,
       phone: this.editUserForm.get("phone").value,
-      photo: (await userData).photo_url,
-      photo_path: (await userData).photo_path,
+      photo: (await this.photoData).photo_url,
+      photo_path: (await this.photoData).photo_path,
       position: this.editUserForm.get("position").value
     };
     this.cheerfulUserService.endEditingUser.next(sendUser);
@@ -124,9 +127,13 @@ export class EditUserDialogOverviewDialog
     this.editUserForm.reset();
     this.dialogRef.close();
   }
-  onRemovePhoto() {
-    this.firebaseService.onDeleteFile(this.user.photo_path);
+  onRemovePhoto(pathToPhoto: string) {
+    if (pathToPhoto) {
+      this.firebaseService.onDeleteFile(pathToPhoto);
+    }
     this.userPhotoViewer = "";
+    this.user.photo_path = null;
+    this.user.photo = null;
   }
 
   ngOnDestroy() {

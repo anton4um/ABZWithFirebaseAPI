@@ -166,7 +166,7 @@ export class CheerfulUsersComponent
    photoData = await this.firebaseService
       .uploadUserFileToFirebase(file)
 
-    if (photoData.photo_path) {
+    if (photoData.photo_url) {
       this.httpService
         .postUserDataToUrl(this.url_users, {
           name: this.signupForm.get("username").value,
