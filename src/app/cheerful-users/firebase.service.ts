@@ -1,9 +1,10 @@
+import { UserDataFormat } from './user-models/user-data-format';
+import { User } from "./user-models/user.model";
 import { Injectable, OnInit } from "@angular/core";
 
 import {
   AngularFireStorage,
-  AngularFireStorageReference,
-  AngularFireUploadTask
+  AngularFireStorageReference
 } from "angularfire2/storage";
 import * as firebase from "firebase/app";
 import "firebase/database";
@@ -49,10 +50,38 @@ export class FirebaseService implements OnInit {
         });
     }
 
-          return this.photoData;
-
-    
+    return this.photoData;
   }
+
+  updateUserEntryInFb(user) {
+    firebase
+      .database()
+      .ref("users/" + user.id)
+      .update({
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        photo: user.photo,
+        photo_path: user.photo_path,
+        position: user.position
+      });
+  }
+
+  updateUserEntryInUsersArray(user) {
+    let retrivedUser: UserDataFormat = null;
+  return  firebase
+      .database()
+      .ref("users/" + user.id)
+      .once("value")
+    //  .then(snapshot => {
+      //  console.log(
+        //  "snapshot from read once in update user entrys: ",
+         // snapshot.val()
+        //);
+        //return snapshot
+     // });
+  }
+
   onDeleteFile(fileName: string) {
     let ref = this.afStorage.ref(fileName);
     ref.delete();

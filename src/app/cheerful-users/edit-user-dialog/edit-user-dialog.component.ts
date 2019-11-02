@@ -43,7 +43,7 @@ export class EditUserDialogOverviewDialog
   error = null;
   user: any;
   startedEdititngUserSub: Subscription;
-  userPhotoViewer;
+  userPhotoViewer: string;
   uploadFileEL: HTMLElement;
   constructor(
     public dialogRef: MatDialogRef<EditUserDialogOverviewDialog>,
@@ -103,7 +103,7 @@ export class EditUserDialogOverviewDialog
       photo_path: (await this.photoData).photo_path,
       position: this.editUserForm.get("position").value
     };
-    this.cheerfulUserService.endEditingUser.next(sendUser);
+    this.cheerfulUserService.endEditingUser.next({...sendUser});
     this.editUserForm.reset();
     this.dialogRef.close();
   }

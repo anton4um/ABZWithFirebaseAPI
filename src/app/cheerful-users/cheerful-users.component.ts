@@ -1,3 +1,4 @@
+import { User } from "./user-models/user.model";
 import { CheerfUserService } from "./cheerf-user.service";
 import { UserDataFormat } from "./user-models/user-data-format";
 import { AuthService } from "./../login-dialog/auth.service";
@@ -92,24 +93,15 @@ export class CheerfulUsersComponent
 
     this.endEditUserSub = this.cheerfulUserService.endEditingUser.subscribe(
       user => {
-        firebase
-          .database()
-          .ref("users/" + user.id)
-          .update({
-            name: user.name,
-            email: user.email,
-            phone: user.phone,
-            photo: user.photo,
-            photo_path: user.photo_path,
-            position: user.position
+
+        this.firebaseService.updateUserEntryInFb(user);
+        
+        this.firebaseService
+          .updateUserEntryInUsersArray(user)
+          .then(snapshot => {
+            this.users[this.currentUserIndex] = snapshot.val();
           });
-        this.users[this.currentUserIndex].name = user.name;
-        this.users[this.currentUserIndex].email = user.email;
-        this.users[this.currentUserIndex].phone = user.phone;
-        this.users[this.currentUserIndex].photo = user.photo;
-        this.users[this.currentUserIndex].photo_path = user.photo_path;
-        this.users[this.currentUserIndex].position = user.position;
-       }
+      }
     );
 
     this.signupForm = new FormGroup({
@@ -117,9 +109,7 @@ export class CheerfulUsersComponent
       email: new FormControl(null, [Validators.required, Validators.email]),
       phone: new FormControl("", [Validators.required /*this.phoneValidator*/]),
       position: new FormControl(null, Validators.required),
-      upload: new FormControl(null, [
-        Validators.required
-      ]),
+      upload: new FormControl(null, [Validators.required]),
       pathToFileUpload: new FormControl(null, Validators.required)
     });
   }
@@ -155,6 +145,7 @@ export class CheerfulUsersComponent
   //   }
   // }
   // file = this.uploadFileEl["files"][0];
+
   ref: AngularFireStorageReference;
   task: AngularFireUploadTask;
   uploadProgress: number;
@@ -163,8 +154,7 @@ export class CheerfulUsersComponent
   async uploadDataToFirebase() {
     let file = this.uploadFileEl["files"][0];
     let photoData: any;
-   photoData = await this.firebaseService
-      .uploadUserFileToFirebase(file)
+    photoData = await this.firebaseService.uploadUserFileToFirebase(file);
 
     if (photoData.photo_url) {
       this.httpService
@@ -202,7 +192,7 @@ export class CheerfulUsersComponent
   }
   onEditUser(index: number) {
     this.currentUserIndex = index;
-    this.cheerfulUserService.startedEdititngUser.next(this.users[index]);
+    this.cheerfulUserService.startedEdititngUser.next({ ...this.users[index] });
     this.editUserDialog.openDialog();
   }
 

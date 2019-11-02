@@ -4,9 +4,9 @@ export interface UserDataFormat {
         name: string,
         email: string,
         phone: string,
-        //url link in internet
+        //url link in the internet
         photo?: string,
-        //path in firebase
+        //path to photo in firebase storage
         photo_path?: string,
         position: string,
 
