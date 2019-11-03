@@ -43,6 +43,10 @@ import {
   EditUserDialogComponent,
   EditUserDialogOverviewDialog
 } from "./cheerful-users/edit-user-dialog/edit-user-dialog.component";
+import { LoginSpinner } from "./shared/login-spinner/login-spinner.component";
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {SnackBarMainComponent, SnackBarComponent} from './shared/snackbar/snack-bar.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -58,9 +62,20 @@ import {
     LoginDialogOverviewDialog,
     LoadingSpinnerComponent,
     EditUserDialogComponent,
-    EditUserDialogOverviewDialog
+    EditUserDialogOverviewDialog,
+    LoginSpinner,
+    SnackBarMainComponent,
+    SnackBarComponent
   ],
-  entryComponents: [DialogOverviewExampleDialog, LoginDialogOverviewDialog, EditUserDialogComponent, EditUserDialogOverviewDialog],
+  entryComponents: [
+    DialogOverviewExampleDialog,
+    LoginDialogOverviewDialog,
+    EditUserDialogComponent,
+    EditUserDialogOverviewDialog,
+    SnackBarMainComponent,
+    SnackBarComponent,
+    
+  ],
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -72,6 +87,7 @@ import {
     TextMaskModule,
     IMaskModule,
     LayoutModule,
+    MatSnackBarModule,
     MatToolbarModule,
     MatButtonModule,
     MatSidenavModule,

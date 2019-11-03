@@ -197,6 +197,9 @@ export class CheerfulUsersComponent
   }
 
   onSubmit() {
+    if(!this.signupForm.valid){
+      return
+    }
     this.uploadDataToFirebase();
   }
 

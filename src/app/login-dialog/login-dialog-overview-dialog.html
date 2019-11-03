@@ -2,7 +2,7 @@
   Please SignUp or Login
 </h1>
 <div class="text-center" *ngIf="isLoading">
-  <app-loading-spinner></app-loading-spinner>
+  <app-login-spinner></app-login-spinner>
 </div>
 <div mat-dialog-content class="text-center" *ngIf="!isLoading">
   <div class="alert alert-danger" *ngIf="error">{{ error }}</div>
@@ -50,3 +50,4 @@
     </div>
   </form>
 </div>
+<app-snack-bar-component #snackbar></app-snack-bar-component>

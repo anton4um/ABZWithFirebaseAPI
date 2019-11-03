@@ -9,6 +9,7 @@ import { Component, OnInit, AfterViewInit, OnDestroy } from "@angular/core";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { Subscription } from "rxjs";
 import Inputmask from "inputmask";
+import {UserDataFormat} from '../user-models/user-data-format';
 
 export interface DialogData {
   animal: string;
@@ -36,12 +37,12 @@ export class EditUserDialogComponent implements OnInit {
 })
 export class EditUserDialogOverviewDialog
   implements OnInit, AfterViewInit, OnDestroy {
-  isInLoginMode = true;
+  // isInLoginMode = true;
   userPositions: UserPosition[] = [];
-  public editUserForm: FormGroup;
+  editUserForm: FormGroup;
   isLoading = false;
   error = null;
-  user: any;
+  user: UserDataFormat;
   startedEdititngUserSub: Subscription;
   userPhotoViewer: string;
   uploadFileEL: HTMLElement;
@@ -123,10 +124,12 @@ export class EditUserDialogOverviewDialog
       };
     });
   }
+
   dialogCencel() {
     this.editUserForm.reset();
     this.dialogRef.close();
   }
+
   onRemovePhoto(pathToPhoto: string) {
     if (pathToPhoto) {
       this.firebaseService.onDeleteFile(pathToPhoto);

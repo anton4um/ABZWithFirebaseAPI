@@ -7,6 +7,22 @@ a.nav-item.nav-link{
   padding-right: 0;
   color: black;
 }
+a.nav-item.nav-link :hover{
+  /*text-transform: none;*/
+  padding-right: 0;
+  color: coral !important;
+}
+ul>li>a{
+  font-size: 1.5vw
+}
+.super-user-data > a {
+  font-size: 1.4vw
+}
+.super-user-data > p{
+  line-height: 20px;
+  margin-top: 20px;
+  font-size: 1.4vw
+}
 .user-data > p{
   line-height: 18px;
   margin-top: 15px;
