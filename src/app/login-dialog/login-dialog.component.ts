@@ -26,7 +26,7 @@ export class LoginDialogComponent implements OnInit {
   constructor(public dialog: MatDialog) {}
   public openDialog(): void {
     const dialogRef = this.dialog.open(LoginDialogOverviewDialog, {
-      width: "300px"
+      width: "350px"
     });
 
     // dialogRef.afterClosed().subscribe(result => {
