@@ -63,6 +63,7 @@ export class CheerfulUsersComponent
   ngOnInit() {
     this.authService.user.subscribe(user => {
       if (user) {
+        this.users = [];
         this.httpService
           .getUserDataFromUrl(this.url_users)
           .subscribe(response => {
