@@ -1,3 +1,4 @@
+import { User } from "./../user-models/user.model";
 import { FirebaseService } from "./../firebase.service";
 import { CheerfUserService } from "./../cheerf-user.service";
 import { UserPosition } from "./../user-models/user-position.model";
@@ -9,7 +10,12 @@ import { Component, OnInit, AfterViewInit, OnDestroy } from "@angular/core";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { Subscription } from "rxjs";
 import Inputmask from "inputmask";
-import {UserDataFormat} from '../user-models/user-data-format';
+import { UserDataFormat } from "../user-models/user-data-format";
+
+import * as EditUserActions from "../store/edit-user.actions";
+import * as fromApp from "../../store/app.reducer";
+import { Store } from "@ngrx/store";
+import { map } from "rxjs/operators";
 
 export interface DialogData {
   animal: string;
@@ -50,7 +56,8 @@ export class EditUserDialogOverviewDialog
     public dialogRef: MatDialogRef<EditUserDialogOverviewDialog>,
     private httpService: HttpService,
     private cheerfulUserService: CheerfUserService,
-    private firebaseService: FirebaseService
+    private firebaseService: FirebaseService,
+    private store: Store<fromApp.AppState>
   ) {}
 
   ngOnInit() {
@@ -65,8 +72,14 @@ export class EditUserDialogOverviewDialog
       .subscribe(positions => {
         this.userPositions = positions as UserPosition[];
       });
-    this.startedEdititngUserSub = this.cheerfulUserService.startedEdititngUser.subscribe(
-      user => {
+    this.startedEdititngUserSub = this.store
+      .select("editUser")
+      .pipe(
+        map(userData => {
+          return userData.user;
+        })
+      )
+      .subscribe(user => {
         // console.log("our user from page: ", user);
         this.userPhotoViewer = user.photo;
         this.user = user;
@@ -76,8 +89,7 @@ export class EditUserDialogOverviewDialog
           phone: user.phone
         });
         this.editUserForm.get("position").setValue(user.position);
-      }
-    );
+      });
   }
   photoData: { photo_path: string; photo_url: string } = {
     photo_path: null,
@@ -95,7 +107,7 @@ export class EditUserDialogOverviewDialog
       );
     }
 
-    let sendUser = {
+    let sendUser: UserDataFormat = {
       id: this.user.id,
       name: this.editUserForm.get("name").value,
       email: this.editUserForm.get("email").value,
@@ -104,7 +116,7 @@ export class EditUserDialogOverviewDialog
       photo_path: (await this.photoData).photo_path,
       position: this.editUserForm.get("position").value
     };
-    this.cheerfulUserService.endEditingUser.next({...sendUser});
+    this.store.dispatch(new EditUserActions.editUserEnd({...sendUser}));
     this.editUserForm.reset();
     this.dialogRef.close();
   }

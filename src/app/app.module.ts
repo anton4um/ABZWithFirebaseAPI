@@ -46,6 +46,9 @@ import {
 import { LoginSpinner } from "./shared/login-spinner/login-spinner.component";
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {SnackBarMainComponent, SnackBarComponent} from './shared/snackbar/snack-bar.component';
+import {StoreModule} from '@ngrx/store';
+
+import * as fromApp from "./store/app.reducer"
 
 @NgModule({
   declarations: [
@@ -65,7 +68,7 @@ import {SnackBarMainComponent, SnackBarComponent} from './shared/snackbar/snack-
     EditUserDialogOverviewDialog,
     LoginSpinner,
     SnackBarMainComponent,
-    SnackBarComponent
+    SnackBarComponent,
   ],
   entryComponents: [
     DialogOverviewExampleDialog,
@@ -77,6 +80,7 @@ import {SnackBarMainComponent, SnackBarComponent} from './shared/snackbar/snack-
     
   ],
   imports: [
+    StoreModule.forRoot(fromApp.appReducer),
     BrowserModule,
     HttpClientModule,
     BrowserAnimationsModule,
@@ -101,7 +105,7 @@ import {SnackBarMainComponent, SnackBarComponent} from './shared/snackbar/snack-
       projectId: "abztesttask",
       messagingSenderId: "1001346095032"
     }),
-    AngularFireStorageModule
+    AngularFireStorageModule,
   ],
   providers: [HttpService, CheerfUserService],
   bootstrap: [AppComponent]

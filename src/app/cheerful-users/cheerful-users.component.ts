@@ -1,4 +1,4 @@
-import { User } from "./user-models/user.model";
+import { exhaustMap, switchMap, map, take } from "rxjs/operators";
 import { CheerfUserService } from "./cheerf-user.service";
 import { UserDataFormat } from "./user-models/user-data-format";
 import { AuthService } from "./../login-dialog/auth.service";
@@ -22,10 +22,14 @@ import {
 } from "angularfire2/storage";
 import * as firebase from "firebase/app";
 import "firebase/database";
-import { EditUserDialogComponent } from "./edit-user-dialog/edit-user-dialog.component";
 import { Subscription } from "rxjs";
+import { Store } from "@ngrx/store";
+
+import { EditUserDialogComponent } from "./edit-user-dialog/edit-user-dialog.component";
 import { FirebaseService } from "./firebase.service";
-import { async } from "rxjs/internal/scheduler/async";
+import * as fromApp from "../store/app.reducer";
+import * as EditUserActions from "../cheerful-users/store/edit-user.actions";
+import { UserSigne } from "../login-dialog/user-signe.model";
 
 declare var $: any;
 @Component({
@@ -57,53 +61,71 @@ export class CheerfulUsersComponent
     private authService: AuthService,
     private afStorage: AngularFireStorage,
     private cheerfulUserService: CheerfUserService,
-    private firebaseService: FirebaseService
+    private firebaseService: FirebaseService,
+    private store: Store<fromApp.AppState>
   ) {}
 
   ngOnInit() {
-    this.authService.user.subscribe(user => {
-      if (user) {
-        this.users = [];
-        this.httpService
-          .getUserDataFromUrl(this.url_users)
-          .subscribe(response => {
-            // console.log("Response Users from firebase: ", response);
-            for (let key in response) {
-              // console.log('Key: ',key ,'response with key', response[key]);
-              this.users.push({
-                id: key,
-                name: response[key].name,
-                email: response[key].email,
-                phone: response[key].phone,
-                photo: response[key].photo,
-                photo_path: response[key].photo_path,
-                position: response[key].position
-              });
-            }
-            // console.log(this.users);
-          });
-        this.httpService
-          .getUserDataFromUrl(this.url_positions)
-          .subscribe(response => {
-            for (let key in response) {
-              this.userPositions.push(response[key]);
-            }
-          });
-      }
-    });
+    // this.authService.user.subscribe(user => {
+    this.store
+      .select("auth")
+      .pipe(
+        map(authData => {
+          console.log("authData from select auth: ", authData);
+          return authData.user;
+        })
+      )
+      .subscribe(user => {
+        if (user) {
+          this.users = [];
+          this.httpService
+            .getUserDataFromUrl(this.url_users)
+            .subscribe(response => {
+              // console.log("Response Users from firebase: ", response);
+              for (let key in response) {
+                // console.log('Key: ',key ,'response with key', response[key]);
+                this.users.push({
+                  id: key,
+                  name: response[key].name,
+                  email: response[key].email,
+                  phone: response[key].phone,
+                  photo: response[key].photo,
+                  photo_path: response[key].photo_path,
+                  position: response[key].position
+                });
+              }
+              // console.log(this.users);
+            });
+          this.httpService
+            .getUserDataFromUrl(this.url_positions)
+            .subscribe(response => {
+              for (let key in response) {
+                this.userPositions.push(response[key]);
+              }
+            });
+        }
+      });
 
-    this.endEditUserSub = this.cheerfulUserService.endEditingUser.subscribe(
-      user => {
+    this.endEditUserSub = this.store
+      .select("editUser")
+      .pipe(
+        map(editUserData => {
+          console.log("select edit user: ", editUserData);
+          return editUserData.user;
+        })
+      )
+      .subscribe(user => {
+        console.log("subscribe in editUser user: ", user);
+        if (user) {
+          this.firebaseService.updateUserEntryInFb(user);
 
-        this.firebaseService.updateUserEntryInFb(user);
-        
-        this.firebaseService
-          .updateUserEntryInUsersArray(user)
-          .then(snapshot => {
-            this.users[this.currentUserIndex] = snapshot.val();
-          });
-      }
-    );
+          this.firebaseService
+            .updateUserEntryInUsersArray(user)
+            .then(snapshot => {
+              this.users[this.currentUserIndex] = snapshot.val();
+            });
+        }
+      });
 
     this.signupForm = new FormGroup({
       username: new FormControl(null, Validators.required),
@@ -193,13 +215,16 @@ export class CheerfulUsersComponent
   }
   onEditUser(index: number) {
     this.currentUserIndex = index;
-    this.cheerfulUserService.startedEdititngUser.next({ ...this.users[index] });
+    // this.cheerfulUserService.startedEdititngUser.next({ ...this.users[index] });
+    this.store.dispatch(
+      new EditUserActions.editUserStart({ ...this.users[index] })
+    );
     this.editUserDialog.openDialog();
   }
 
   onSubmit() {
-    if(!this.signupForm.valid){
-      return
+    if (!this.signupForm.valid) {
+      return;
     }
     this.uploadDataToFirebase();
   }

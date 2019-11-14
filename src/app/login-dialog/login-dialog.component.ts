@@ -6,8 +6,6 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import {
   MatDialog,
   MatDialogRef,
-  MAT_DIALOG_DATA,
-  MatDialogClose
 } from "@angular/material/dialog";
 import { Observable } from "rxjs";
 import {SnackBarMainComponent} from '../shared/snackbar/snack-bar.component';
