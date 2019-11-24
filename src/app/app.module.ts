@@ -49,6 +49,8 @@ import {SnackBarMainComponent, SnackBarComponent} from './shared/snackbar/snack-
 import {StoreModule} from '@ngrx/store';
 
 import * as fromApp from "./store/app.reducer"
+import {EffectsModule} from '@ngrx/effects';
+import {AuthEffects} from './login-dialog/store/auth.effects';
 
 @NgModule({
   declarations: [
@@ -81,6 +83,7 @@ import * as fromApp from "./store/app.reducer"
   ],
   imports: [
     StoreModule.forRoot(fromApp.appReducer),
+    EffectsModule.forRoot([AuthEffects]),
     BrowserModule,
     HttpClientModule,
     BrowserAnimationsModule,

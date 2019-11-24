@@ -1,14 +1,15 @@
+import { Store } from "@ngrx/store";
 import { AuthService, AuthResponseData } from "./auth.service";
 import { Validators } from "@angular/forms";
 import { FormControl } from "@angular/forms";
 import { FormGroup } from "@angular/forms";
 import { Component, OnInit, ViewChild } from "@angular/core";
-import {
-  MatDialog,
-  MatDialogRef,
-} from "@angular/material/dialog";
+import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { Observable } from "rxjs";
-import {SnackBarMainComponent} from '../shared/snackbar/snack-bar.component';
+import { SnackBarMainComponent } from "../shared/snackbar/snack-bar.component";
+
+import * as fromApp from "../store/app.reducer";
+import * as AuthActions from "../login-dialog/store/auth.actions";
 
 export interface DialogData {
   animal: string;
@@ -40,7 +41,7 @@ export class LoginDialogComponent implements OnInit {
   templateUrl: "./login-dialog-overview-dialog.html"
 })
 export class LoginDialogOverviewDialog implements OnInit {
-  @ViewChild(SnackBarMainComponent, {static: false})
+  @ViewChild(SnackBarMainComponent, { static: false })
   private snackBarAlert: SnackBarMainComponent;
 
   isInLoginMode = true;
@@ -50,14 +51,19 @@ export class LoginDialogOverviewDialog implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<LoginDialogOverviewDialog>,
-    private authService: AuthService
-  )
-  {}
+    private authService: AuthService,
+    private store: Store<fromApp.AppState>
+  ) {}
 
   ngOnInit() {
     this.authForm = new FormGroup({
       email: new FormControl(null, [Validators.required, Validators.email]),
       password: new FormControl(null, Validators.required)
+    });
+
+    this.store.select("auth").subscribe(authState => {
+      this.isLoading = authState.isLoading;
+      this.error = authState.authError;
     });
   }
   switchLoginMode() {
@@ -70,27 +76,33 @@ export class LoginDialogOverviewDialog implements OnInit {
     const email = form.value.email;
     const password = form.value.password;
     if (this.isInLoginMode) {
-      this.isLoading = true;
-      this.authObs = this.authService.login(email, password);
+      // this.isLoading = true;
+      // this.authObs = this.authService.login(email, password);
+      this.store.dispatch(
+        new AuthActions.LoginStart({ email: email, password: password })
+      );
     } else {
-      this.isLoading = true;
-      this.authObs = this.authService.signup(email, password);
+      // this.isLoading = true;
+      // this.authObs = this.authService.signup(email, password);
+      this.store.dispatch(
+        new AuthActions.SignupStart({ email: email, password: password })
+      );
     }
 
-    this.authObs.subscribe(
-      responseData => {
-        // console.log(responseData);
-        this.snackBarAlert.openSnackBar();
-        this.isLoading = false;
-        form.reset();
-        this.dialogRef.close();
-      },
-      errorMessage => {
-        console.log("Some Error: ", errorMessage);
-        this.error = errorMessage;
-        this.isLoading = false;
-        form.reset();
-      }
-    );
+    // this.authObs.subscribe(
+    //   responseData => {
+    //     // console.log(responseData);
+    //     this.snackBarAlert.openSnackBar();
+    //     this.isLoading = false;
+    //     form.reset();
+    //     this.dialogRef.close();
+    //   },
+    //   errorMessage => {
+    //     console.log("Some Error: ", errorMessage);
+    //     this.error = errorMessage;
+    //     this.isLoading = false;
+    //     form.reset();
+    //   }
+    // );
   }
 }

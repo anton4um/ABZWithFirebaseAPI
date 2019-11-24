@@ -4,18 +4,20 @@ import * as AuthActions from "./auth.actions";
 
 export interface State {
   user: UserSigne;
-  isAuth: boolean;
+  authError: string;
+  isLoading: boolean;
 }
 const initialState: State = {
   user: null,
-  isAuth: false,
+  authError: null,
+  isLoading: false,
 };
 export function authReducer(
   state = initialState,
   action: AuthActions.AuthActions
 ) {
   switch (action.type) {
-    case AuthActions.LOGIN:
+    case AuthActions.AUTHENTICATE_SUCCESS:
       console.log("Hello from Login");
       const user = new UserSigne(
         action.payload.email,
@@ -26,14 +28,25 @@ export function authReducer(
       return {
         ...state,
         user: user,
-        isAuth: true,
+        isLoading: false,
       };
     case AuthActions.LOGOUT:
         return {
             ...state,
             user: null,
-            isAuth: false,
         }  
+    case AuthActions.LOGIN_START:
+        return {
+            ...state,
+            authError: null,
+            isLoading: true,
+        }    
+    case AuthActions.AUTHENTICATE_FALE: 
+        return {
+            ...state,
+            authError: action.payload,
+            isLoading: false,
+        }    
     default: 
         return state    
   }

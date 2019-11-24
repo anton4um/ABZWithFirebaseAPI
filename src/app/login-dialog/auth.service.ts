@@ -46,7 +46,7 @@ export class AuthService {
       // this.user.next(loadedUser);
 
       this.store.dispatch(
-        new AuthActions.LoginUser({
+        new AuthActions.AuthenticateSuccess({
           email: loadedUser.email,
           userId: loadedUser.id,
           token: loadedUser.token,
@@ -135,7 +135,7 @@ export class AuthService {
     // this.user.next(user);
 
     this.store.dispatch(
-      new AuthActions.LoginUser({
+      new AuthActions.AuthenticateSuccess({
         email: email,
         userId: localId,
         token: idToken,
