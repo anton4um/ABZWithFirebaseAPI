@@ -1,5 +1,6 @@
+import { UserSigne } from "./../user-signe.model";
 import { HttpClient } from "@angular/common/http";
-import { switchMap } from "rxjs/operators";
+import { switchMap, tap } from "rxjs/operators";
 import { Actions, ofType, Effect } from "@ngrx/effects";
 import { map, catchError } from "rxjs/operators";
 import { of } from "rxjs";
@@ -23,7 +24,8 @@ export const authenticationHendler = (
   token: string
 ) => {
   const expirationDate = new Date(new Date().getTime() + +expiresIn * 1000);
-
+  const user = new UserSigne(email, userId, token, expirationDate);
+  localStorage.setItem("userData", JSON.stringify(user));
   return new AuthActions.AuthenticateSuccess({
     email: email,
     userId: userId,
@@ -31,22 +33,22 @@ export const authenticationHendler = (
     expirationDate: expirationDate
   });
 };
-export const errorHendler = (errorRes) => {
-    let errorMessage = "Unknown Error occurred";
-            if (!errorRes.error || !errorRes.error.error.message) {
-              return of(new AuthActions.AuthenticateFale(errorMessage));
-            }
-            switch (errorRes.error.error.message) {
-              case "EMAIL_EXISTS":
-                errorMessage = "This Email Already Exists";
-                break;
-              case "INVALID_PASSWORD":
-                errorMessage = "Password is wrong";
-                break;
-              case "USER_DISABLED":
-                errorMessage = "This user was disabled";
-            }
-            return of(new AuthActions.AuthenticateFale(errorMessage));
+export const errorHendler = errorRes => {
+  let errorMessage = "Unknown Error occurred";
+  if (!errorRes.error || !errorRes.error.error.message) {
+    return of(new AuthActions.AuthenticateFale(errorMessage));
+  }
+  switch (errorRes.error.error.message) {
+    case "EMAIL_EXISTS":
+      errorMessage = "This Email Already Exists";
+      break;
+    case "INVALID_PASSWORD":
+      errorMessage = "Password is wrong";
+      break;
+    case "USER_DISABLED":
+      errorMessage = "This user was disabled";
+  }
+  return of(new AuthActions.AuthenticateFale(errorMessage));
 };
 
 @Injectable()
@@ -66,7 +68,7 @@ export class AuthEffects {
         )
         .pipe(
           map(responseData => {
-           return authenticationHendler(
+            return authenticationHendler(
               responseData.expiresIn,
               responseData.email,
               responseData.localId,
@@ -95,36 +97,67 @@ export class AuthEffects {
         )
         .pipe(
           map(responseData => {
-            const expirationDate = new Date(
-              new Date().getTime() + +responseData.expiresIn * 1000
+            return authenticationHendler(
+              responseData.expiresIn,
+              responseData.email,
+              responseData.localId,
+              responseData.idToken
             );
-
-            return new AuthActions.AuthenticateSuccess({
-              email: responseData.email,
-              userId: responseData.localId,
-              token: responseData.idToken,
-              expirationDate: expirationDate
-            });
           }),
           catchError(errorRes => {
-            let errorMessage = "Unknown Error occurred";
-            if (!errorRes.error || !errorRes.error.error.message) {
-              return of(new AuthActions.AuthenticateFale(errorMessage));
-            }
-            switch (errorRes.error.error.message) {
-              case "EMAIL_EXISTS":
-                errorMessage = "This Email Already Exists";
-                break;
-              case "INVALID_PASSWORD":
-                errorMessage = "Password is wrong";
-                break;
-              case "USER_DISABLED":
-                errorMessage = "This user was disabled";
-            }
-            return of(new AuthActions.AuthenticateFale(errorMessage));
+            return errorHendler(errorRes);
           })
         );
     })
   );
+
+  @Effect({ dispatch: false })
+  authLogout = this.actions$.pipe(
+    ofType(AuthActions.LOGOUT),
+    tap(() => {
+      localStorage.removeItem("userData");
+    })
+  );
+
+  @Effect()
+  autoLogin = this.actions$.pipe(
+    ofType(AuthActions.AUTO_LOGIN),
+    map(() => {
+        const userData: {
+            id: string;
+            email: string;
+            _token: string;
+            _tokenExpirationDate: string;
+          } = JSON.parse(localStorage.getItem("userData"));
+          if (!userData) {
+            return {type: "DUMMY"};
+          }
+          const loadedUser = new UserSigne(
+            userData.id,
+            userData.email,
+            userData._token,
+            new Date(userData._tokenExpirationDate)
+          );
+          if (loadedUser.token) {
+            // this.user.next(loadedUser);
+      
+            
+            return new AuthActions.AuthenticateSuccess({
+                email: loadedUser.email,
+                userId: loadedUser.id,
+                token: loadedUser.token,
+                expirationDate: new Date(userData._tokenExpirationDate)
+              })
+        
+      
+            // const exporationTime =
+            //   new Date(userData._tokenExpirationDate).getTime() -
+            //   new Date().getTime();
+            // this.autoLogout(exporationTime);
+          }
+        return {type: "DUMMY"};  
+    })
+  );
+
   constructor(private actions$: Actions, private http: HttpClient) {}
 }

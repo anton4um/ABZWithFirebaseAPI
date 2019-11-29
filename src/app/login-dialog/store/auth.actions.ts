@@ -5,6 +5,7 @@ export const LOGOUT = "[Auth] Logout";
 export const AUTHENTICATE_SUCCESS = "[Auth] Login";
 export const AUTHENTICATE_FALE = "[Auth] Login fale";
 export const SIGNUP_START = "[Auth] SingUp start";
+export const AUTO_LOGIN = "[Auth] Auto Login";
 
 export class AuthenticateSuccess implements Action {
   readonly type = AUTHENTICATE_SUCCESS;
@@ -41,8 +42,14 @@ export class SignupStart implements Action {
     constructor(public payload: { email: string; password: string }){}
 }
 
+export class AutoLogin implements Action {
+    readonly type = AUTO_LOGIN;
+}
+
 export type AuthActions =
   | AuthenticateSuccess
   | Logout
   | LoginStart
-  | AuthenticateFale;
+  | AuthenticateFale
+  | SignupStart
+  | AutoLogin;
