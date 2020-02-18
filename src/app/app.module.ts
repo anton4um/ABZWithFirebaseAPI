@@ -82,6 +82,7 @@ import {AuthEffects} from './login-dialog/store/auth.effects';
     
   ],
   imports: [
+	  
     StoreModule.forRoot(fromApp.appReducer),
     EffectsModule.forRoot([AuthEffects]),
     BrowserModule,

@@ -17,6 +17,7 @@ export interface AuthResponseData {
   registered?: boolean;
 }
 
+
 export const authenticationHendler = (
   expiresIn: string,
   email: string,

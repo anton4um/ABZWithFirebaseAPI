@@ -193,7 +193,7 @@ export class CheerfulUsersComponent
           response => {
             if (response) {
               console.log("Response was succeed!!!", response);
-              firebase
+			  firebase
                 .database()
                 .ref("users/" + response["name"])
                 .on("value", snap => {
